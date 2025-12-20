@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styles from "../app/login/login.module.css" // Reusing login styles for consistency
 
 export default function RegisterForm() {
@@ -7,11 +7,36 @@ export default function RegisterForm() {
         name: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        acceptLegal: false
     })
     const [error, setError] = useState("")
     const [success, setSuccess] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [hasReadLegal, setHasReadLegal] = useState(false)
+    const [legalStatus, setLegalStatus] = useState({ privacy: false, terms: false })
+
+    useEffect(() => {
+        const checkLegalStatus = () => {
+            const privacy = localStorage.getItem('legal_privacy_read') === 'true'
+            const terms = localStorage.getItem('legal_terms_read') === 'true'
+            setLegalStatus({ privacy, terms })
+            setHasReadLegal(privacy && terms)
+        }
+
+        checkLegalStatus()
+        window.addEventListener('storage', checkLegalStatus)
+        const interval = setInterval(checkLegalStatus, 1000)
+
+        return () => {
+            window.removeEventListener('storage', checkLegalStatus)
+            clearInterval(interval)
+        }
+    }, [])
+
+    const handleLinkClick = () => {
+        // No-op
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -20,6 +45,12 @@ export default function RegisterForm() {
 
         if (formData.password !== formData.confirmPassword) {
             setError("Las contraseñas no coinciden")
+            setLoading(false)
+            return
+        }
+
+        if (!formData.acceptLegal) {
+            setError("Debes aceptar la Política de Privacidad y el Aviso Legal")
             setLoading(false)
             return
         }
@@ -121,6 +152,63 @@ export default function RegisterForm() {
                     required
                     minLength={6}
                 />
+            </div>
+
+
+
+            <div className={`mb-8 p-5 rounded-xl border transition-all duration-300 ${hasReadLegal ? 'bg-green-500/5 border-green-500/20 shadow-[0_0_15px_-3px_rgba(34,197,94,0.1)]' : 'bg-slate-800/50 border-slate-700/50'}`}>
+                <div className="flex items-start gap-4">
+                    <div className="pt-1">
+                        <input
+                            type="checkbox"
+                            id="legal"
+                            checked={formData.acceptLegal}
+                            onChange={(e) => setFormData({ ...formData, acceptLegal: e.target.checked })}
+                            disabled={!hasReadLegal}
+                            className={`w-5 h-5 rounded border-slate-600 bg-slate-700/50 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900 transition-all ${!hasReadLegal ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer'}`}
+                        />
+                    </div>
+                    <div className="flex-1 space-y-3">
+                        <label htmlFor="legal" className="text-sm text-slate-300 block leading-relaxed">
+                            He leído y acepto la <a href="/legal/privacy" target="_blank" className="text-blue-400 hover:text-blue-300 font-medium hover:underline underline-offset-4 decoration-blue-400/30 transition-colors">Política de Privacidad</a> y el <a href="/legal/terms" target="_blank" className="text-blue-400 hover:text-blue-300 font-medium hover:underline underline-offset-4 decoration-blue-400/30 transition-colors">Aviso Legal</a>.
+                        </label>
+
+                        <div className="space-y-2 pt-2 border-t border-white/5">
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                                <a
+                                    href="/legal/privacy"
+                                    target="_blank"
+                                    className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-full transition-colors border ${legalStatus.privacy
+                                        ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                        : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20'}`}
+                                >
+                                    {legalStatus.privacy
+                                        ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                                        : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10" /></svg>}
+                                    Política de Privacidad
+                                </a>
+                                <a
+                                    href="/legal/terms"
+                                    target="_blank"
+                                    className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-full transition-colors border ${legalStatus.terms
+                                        ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                        : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20'}`}
+                                >
+                                    {legalStatus.terms
+                                        ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                                        : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10" /></svg>}
+                                    Aviso Legal
+                                </a>
+                            </div>
+
+                            {!hasReadLegal && (
+                                <p className="text-xs text-slate-400 italic">
+                                    * Debes abrir y confirmar la lectura de ambos documentos para continuar.
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <button
