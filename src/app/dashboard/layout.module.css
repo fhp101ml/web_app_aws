@@ -1,0 +1,16 @@
+.layoutContainer {
+    min-height: 100vh;
+    background-color: hsl(var(--bg-primary));
+}
+
+.mainContent {
+    max-width: 80rem;
+    /* Equivalent to max-w-7xl */
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    /* px-6 */
+    padding-top: 160px;
+    /* pt-40 equivalent, strict spacing for header */
+    padding-bottom: 3rem;
+    /* pb-12 */
+}

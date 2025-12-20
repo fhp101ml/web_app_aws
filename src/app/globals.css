@@ -1,27 +1,61 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Premium Dark Palette (Default) */
+  --bg-primary: 220 15% 10%;
+  /* Almost black blue */
+  --bg-secondary: 220 15% 14%;
+  --bg-card: 220 15% 18%;
+
+  --text-primary: 220 20% 98%;
+  --text-secondary: 220 15% 70%;
+  --text-muted: 220 15% 50%;
+
+  /* Accent Colors (Electric Blue & Purple) */
+  --accent-primary: 250 100% 70%;
+  /* Dynamic Purple */
+  --accent-secondary: 190 100% 50%;
+  /* Cyan/Electric Blue */
+  --accent-gradient: linear-gradient(135deg, hsl(var(--accent-primary)), hsl(var(--accent-secondary)));
+
+  /* Status Colors */
+  --success: 150 60% 50%;
+  --warning: 40 90% 60%;
+  --error: 340 80% 60%;
+
+  /* Spacing & Layout */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --header-height: 70px;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(30, 35, 45, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Font Families */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+[data-theme='light'] {
+  /* Premium Light Palette */
+  --bg-primary: 215 25% 92%;
+  /* Much darker Cool Gray for contrast */
+  --bg-secondary: 215 25% 95%;
+  --bg-card: 0 0% 100%;
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+  --text-primary: 222 47% 11%;
+  --text-secondary: 215 25% 40%;
+  --text-muted: 215 20% 65%;
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  /* Visible border */
+  --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Visible shadow */
+
+  /* Card Styles (Light) */
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -30,13 +64,53 @@ body {
   margin: 0;
 }
 
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  background-color: hsl(var(--bg-primary));
+  color: hsl(var(--text-primary));
+  -webkit-font-smoothing: antialiased;
+}
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-md);
+}
+
+.text-gradient {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
 }

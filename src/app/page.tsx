@@ -1,66 +1,47 @@
-import Image from "next/image";
+import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className={styles.main}>
+      <div className={styles.blob1} />
+      <div className={styles.blob2} />
+
+      <div className={styles.container}>
+        <h1 className={styles.title}>
+          Gestión Cloud <span className="text-gradient">Inteligente</span>
+        </h1>
+
+        <p className={styles.subtitle}>
+          Centraliza tu infraestructura AWS en una interfaz premium, diseñada para escalabilidad, seguridad y control total.
+        </p>
+
+        <div className={styles.grid}>
+          <Link href="/dashboard" className={`${styles.card} glass-panel`}>
+            <div className={`${styles.icon} ${styles.iconAws}`}>
+              {/* Lucide: CloudLightning */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973" /><path d="m13 12-3 5h4l-3 5" /></svg>
+            </div>
+            <h3 className={styles.cardTitle}>AWS Manager</h3>
+            <p className={styles.cardText}>Accede al panel de control de instancias EC2, volúmenes y seguridad.</p>
+          </Link>
+
+          <div className={`${styles.card} glass-panel`} style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+            <div className={styles.icon} style={{ background: 'rgba(255,255,255,0.05)', color: '#aaa' }}>
+              {/* Lucide: Globe */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg>
+            </div>
+            <h3 className={styles.cardTitle}>Multi-Cloud</h3>
+            <p className={styles.cardText}>Soporte para Azure y Google Cloud Platform en desarrollo.</p>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className={styles.cta}>
+          <Link href="/login" className="btn-primary" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>
+            Comenzar Ahora
+          </Link>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
