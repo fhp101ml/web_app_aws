@@ -112,3 +112,25 @@
 .cta {
   margin-top: 5rem;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+
+  .grid {
+    margin-top: 3rem;
+    gap: 1rem;
+    padding: 0;
+  }
+}
