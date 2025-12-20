@@ -268,3 +268,33 @@
     width: 24px;
     height: 24px;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .welcomeSection {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .welcomeTitle {
+        font-size: 2rem;
+    }
+
+    .welcomeSubtitle {
+        margin: 0 auto;
+    }
+
+    .statsGrid,
+    .quickActionsGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .sectionTitle::before {
+        display: none;
+    }
+
+    .sectionTitle {
+        justify-content: center;
+    }
+}
