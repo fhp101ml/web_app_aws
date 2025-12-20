@@ -2,9 +2,27 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import rateLimit from "@/lib/rate-limit"
+
+const limiter = rateLimit({
+    interval: 60 * 1000, // 60 seconds
+    uniqueTokenPerInterval: 500, // Max 500 users per second
+})
+
+async function checkRateLimit(limit: number = 10) {
+    try {
+        await limiter.check(new NextResponse(), limit, "CACHE_TOKEN") // Using a global token for simplicity or IP if available
+    } catch {
+        return false
+    }
+    return true
+}
 
 // GET: List all users
 export async function GET(req: Request) {
+    if (!await checkRateLimit(20)) {
+        return NextResponse.json({ message: "Rate limit exceeded" }, { status: 429 })
+    }
     const session = await getServerSession(authOptions)
 
     // Security Check: Only Admins
