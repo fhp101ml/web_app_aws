@@ -30,6 +30,16 @@ Bienvenido a la versión inicial de **ExoCluster**, una plataforma moderna para 
 - **Sistema de Temas**: Soporte nativo para modo oscuro/claro, sincronizado con la sesión.
 - **Navegación Intuitiva**: Header consolidado con menú de usuario desplegable.
 
+### 5. Accesibilidad y Diseño Responsive
+- **Diseño Adaptativo**: Experiencia optimizada para móviles (menús hamburguesa, layouts reordenables).
+- **Accesibilidad**: Cumplimiento WCAG 2.1 AA (contrastes, navegación por teclado, aria-labels).
+- **Animaciones Respetuosas**: Detección de `prefers-reduced-motion`.
+
+### 6. Rendimiento y Seguridad
+- **Optimización**: Carga diferida de fuentes y eliminación de logs en producción.
+- **Seguridad HTTP**: Headers de seguridad (CSP, HSTS, X-Frame-Options) configurados.
+- **Rate Limiting**: Protección contra ataques de fuerza bruta en API Routes (Token Bucket).
+
 ---
 
 ## �️ Stack Tecnológico
@@ -126,8 +136,8 @@ Es prioritario asegurar el estricto cumplimiento de la normativa de protección 
   - **Derecho al Olvido**: Funcionalidad de "Eliminar cuenta" con borrado seguro de datos personales.
 
 ### Otros Requisitos Transversales
-- [ ] **Accesibilidad**: Auditoría completa WCAG 2.1 AA (colores, navegación por teclado, aria-labels).
-- [ ] **Seguridad**:
+- [x] **Accesibilidad**: Auditoría completa WCAG 2.1 AA (colores, navegación por teclado, aria-labels).
+- [x] **Seguridad**:
   - Implementación de cabeceras de seguridad HTTP (Helmet, CSP).
   - Rate Limiting para protección contra ataques de fuerza bruta.
   - Logs de auditoría para acciones críticas.
