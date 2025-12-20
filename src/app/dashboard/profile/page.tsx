@@ -190,6 +190,50 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
+                {/* Legal & Data Rights */}
+                <div className={styles.card}>
+                    <div className={styles.sectionTitle}>
+                        <svg className={styles.sectionIcon} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
+                        Derechos y Privacidad
+                    </div>
+                    <div className={styles.dangerZone}>
+                        <p className={styles.label} style={{ marginBottom: '1rem' }}>Gestión de tus datos (RGPD)</p>
+                        <div className={styles.actionsGrid}>
+                            <button
+                                type="button"
+                                className={styles.btnSecondary}
+                                onClick={async () => {
+                                    window.open('/api/profile/export', '_blank');
+                                }}
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                                Exportar mis datos
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.btnDanger}
+                                onClick={async () => {
+                                    if (confirm("¿Estás seguro? Esta acción eliminará permanentemente tu cuenta y todos tus datos. No se puede deshacer.")) {
+                                        try {
+                                            const res = await fetch('/api/profile', { method: 'DELETE' });
+                                            if (res.ok) {
+                                                window.location.href = '/';
+                                            } else {
+                                                alert("Error al eliminar cuenta");
+                                            }
+                                        } catch (e) {
+                                            alert("Error de conexión");
+                                        }
+                                    }
+                                }}
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                                Eliminar Cuenta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" className={styles.btnSubmit} disabled={loading}>
                     {loading ? "Guardando..." : "Guardar Cambios"}
                 </button>

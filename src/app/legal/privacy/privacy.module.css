@@ -1,0 +1,224 @@
+/* Main Container */
+.container {
+    min-height: 100vh;
+    background-color: #0B0F19;
+    /* Deep dark background */
+    color: #cbd5e1;
+    /* Slate 300 equivalent */
+    font-family: var(--font-inter, sans-serif);
+    padding: 4rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient Background Effects */
+.ambientGlow {
+    position: fixed;
+    top: 0;
+    left: 20%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ambientSecondary {
+    position: fixed;
+    bottom: 0;
+    right: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Layout */
+.wrapper {
+    position: relative;
+    z-index: 10;
+    max-width: 1024px;
+    /* max-w-4xl */
+    margin: 0 auto;
+}
+
+/* Header / Hero */
+.header {
+    text-align: center;
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    /* Blue 400 */
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+.title {
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: 800;
+    background: linear-gradient(to right, #ffffff, #e2e8f0, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+    .title {
+        font-size: 4rem;
+    }
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: #94a3b8;
+    /* Slate 400 */
+    max-width: 65ch;
+    margin: 0 auto;
+}
+
+/* Content Grid */
+.grid {
+    display: grid;
+    gap: 3rem;
+}
+
+/* Card / Section Styles */
+.section {
+    position: relative;
+    padding: 2.5rem;
+    background-color: rgba(15, 23, 42, 0.4);
+    /* Slate 900 / 40 */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.section:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.sectionHeader {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    align-items: flex-start;
+}
+
+.iconWrapper {
+    flex-shrink: 0;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+}
+
+/* Icon colors per context */
+.iconBlue {
+    color: #60a5fa;
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.iconPurple {
+    color: #c084fc;
+    background-color: rgba(168, 85, 247, 0.1);
+    border-color: rgba(168, 85, 247, 0.2);
+}
+
+.iconTeal {
+    color: #2dd4bf;
+    background-color: rgba(45, 212, 191, 0.1);
+    border-color: rgba(45, 212, 191, 0.2);
+}
+
+.iconEmerald {
+    color: #34d399;
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+.text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    font-weight: 300;
+}
+
+.text strong {
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+/* Rights Grid */
+.rightsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.rightTag {
+    display: inline-flex;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: rgba(45, 212, 191, 0.05);
+    border: 1px solid rgba(45, 212, 191, 0.1);
+    color: #5eead4;
+    /* Teal 300 */
+    cursor: default;
+    transition: background-color 0.2s;
+}
+
+.rightTag:hover {
+    background-color: rgba(45, 212, 191, 0.1);
+}
+
+/* Footer Acknowledge area */
+.footer {
+    margin-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 3rem;
+}
+
+.divider {
+    height: 1px;
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
