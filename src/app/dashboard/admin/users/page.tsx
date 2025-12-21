@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+"use client";
+import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import styles from "./users.module.css";
@@ -21,8 +22,15 @@ export default function AdminUsersPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'USER' });
 
+    // Auto-scroll
     useEffect(() => {
         fetchUsers();
+
+        // Listen for refresh events from Chat Widget or other components
+        const handleRefresh = () => fetchUsers();
+        window.addEventListener("REFRESH_USERS_LIST_EVENT", handleRefresh);
+
+        return () => window.removeEventListener("REFRESH_USERS_LIST_EVENT", handleRefresh);
     }, []);
 
     const fetchUsers = async () => {

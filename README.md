@@ -43,6 +43,11 @@ Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
 - **Seguridad HTTP**: Headers de seguridad (CSP, HSTS, X-Frame-Options).
 - **Accesibilidad**: Cumplimiento WCAG 2.1 AA (contrastes, navegación por teclado, aria-labels).
 
+### 7. Asistente Virtual Inteligente 🤖
+- **Chatbot Integrado**: Widget flotante accesible desde cualquier punto de la aplicación.
+- **Soporte Contextual**: Respuestas generadas por IA para ayudar en la gestión de la plataforma.
+- **Diseño Adaptativo**: Interfaz limpia con soporte de tema invertido para mejor legibilidad.
+
 ---
 
 ## 🛠️ Stack Tecnológico

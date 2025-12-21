@@ -43,10 +43,10 @@ export async function POST(req: Request) {
             userId: user.id
         })
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Registration error:", error)
         return NextResponse.json(
-            { message: "Error interno del servidor" },
+            { message: `Error interno: ${error.message}` },
             { status: 500 }
         )
     }
