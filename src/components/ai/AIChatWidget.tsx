@@ -58,6 +58,9 @@ export function AIChatOverlay() {
                 ...prev,
                 { id: (Date.now() + 1).toString(), role: "assistant", content: reply }
             ]);
+
+            // Refresh dashboards or lists if the AI performed an action
+            window.dispatchEvent(new Event("REFRESH_USERS_LIST_EVENT"));
         } catch (err) {
             console.error("Chat error:", err);
             // Optional: Show error in chat

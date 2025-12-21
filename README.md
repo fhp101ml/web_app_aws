@@ -47,6 +47,7 @@ Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
 - **Chatbot Integrado**: Widget flotante accesible desde cualquier punto de la aplicación.
 - **Soporte Contextual**: Respuestas generadas por IA para ayudar en la gestión de la plataforma.
 - **Diseño Adaptativo**: Interfaz limpia con soporte de tema invertido para mejor legibilidad.
+- **Sincronización en Tiempo Real**: Actualización automática de listas (usuarios, etc.) tras acciones del asistente.
 
 ---
 
