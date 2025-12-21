@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import bcrypt from "bcryptjs"
+import { UserService } from "@/lib/services/userService"
 
 export async function POST(req: Request) {
     try {
@@ -13,30 +12,7 @@ export async function POST(req: Request) {
             )
         }
 
-        // Check if user exists
-        const existingUser = await prisma.user.findUnique({
-            where: { email }
-        })
-
-        if (existingUser) {
-            return NextResponse.json(
-                { message: "Usuario ya registrado" },
-                { status: 400 }
-            )
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        // Create inactive user
-        const user = await prisma.user.create({
-            data: {
-                email,
-                name,
-                password: hashedPassword,
-                isActive: false, // Explicitly pending approval
-                role: 'USER'
-            }
-        })
+        const user = await UserService.registerUser({ email, password, name });
 
         return NextResponse.json({
             message: "Cuenta creada. Esperando aprobación del administrador.",

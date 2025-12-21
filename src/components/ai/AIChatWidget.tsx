@@ -51,7 +51,25 @@ export function AIChatOverlay() {
 
             if (!res.ok) throw new Error(res.statusText);
 
-            const reply = await res.text();
+            let reply = await res.text();
+
+            // Client-side Action Parsing
+            const themeMatch = reply.match(/\[CLIENT_ACTION:THEME=(.*?)\]/);
+            if (themeMatch) {
+                const actionTheme = themeMatch[1];
+                reply = reply.replace(themeMatch[0], "").trim(); // Remove tag from visible message
+
+                // Only toggle if current theme differs from requested action
+                // context theme is "dark" or "light"
+                if (actionTheme === "dark" || actionTheme === "light") {
+                    if (theme !== actionTheme) {
+                        // We don't have direct setMode, but toggle switches it.
+                        // Or we can assume toggleTheme flips it.
+                        // To be safe/precise, we could expose setTheme in context, but for now toggle works if binary.
+                        toggleTheme();
+                    }
+                }
+            }
 
             // Add bot message
             setMessages((prev) => [
@@ -88,7 +106,7 @@ export function AIChatOverlay() {
     // Prompt said "elimina la configuración actual", so I will strictly follow the new specs. 
     // Use simple internal state.
 
-    const { theme } = useTheme();
+    const { theme, toggleTheme } = useTheme();
     // Inverted logic: App Dark -> Chat Light | App Light -> Chat Dark
     const chatTheme = theme === "dark" ? "light" : "dark";
 

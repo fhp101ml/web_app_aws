@@ -1,9 +1,8 @@
 
 import { getServerSession } from "next-auth";
+import { UserService } from "@/lib/services/userService";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
 
 export async function PATCH(req: Request) {
     try {
@@ -16,24 +15,10 @@ export async function PATCH(req: Request) {
         const body = await req.json();
         const { name, password, theme } = body;
 
-        const updateData: any = {};
-        if (name) updateData.name = name;
-        if (theme) updateData.theme = theme;
-        if (password) {
-            updateData.password = await bcrypt.hash(password, 10);
-        }
-
-        const updatedUser = await prisma.user.update({
-            where: { email: session.user.email },
-            data: updateData,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                isActive: true,
-                theme: true,
-            }
+        const updatedUser = await UserService.updateUser(session.user.email, {
+            name,
+            password,
+            theme,
         });
 
         return NextResponse.json(updatedUser);
@@ -51,16 +36,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        const user = await prisma.user.findUnique({
-            where: { email: session.user.email },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                theme: true,
-            }
-        });
+        const user = await UserService.getUserByEmail(session.user.email);
 
         if (!user) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -81,9 +57,7 @@ export async function DELETE(req: Request) {
     }
 
     try {
-        await prisma.user.delete({
-            where: { id: (session.user as any).id },
-        })
+        await UserService.deleteUser((session.user as any).id);
 
         return NextResponse.json({ message: "Account deleted" })
 

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import rateLimit from "@/lib/rate-limit"
+import { UserService } from "@/lib/services/userService"
 
 const limiter = rateLimit({
     interval: 60 * 1000, // 60 seconds
@@ -31,24 +32,12 @@ export async function GET(req: Request) {
     }
 
     try {
-        const users = await prisma.user.findMany({
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                isActive: true,
-                createdAt: true
-            },
-            orderBy: { createdAt: 'desc' }
-        })
+        const users = await UserService.listUsers() // Admin sees all
         return NextResponse.json(users)
     } catch (error) {
         return NextResponse.json({ message: "Error fetching users" }, { status: 500 })
     }
 }
-
-const bcrypt = require("bcryptjs")
 
 // POST: Create new user manually
 export async function POST(req: Request) {
@@ -66,38 +55,20 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Missing fields" }, { status: 400 })
         }
 
-        // Check if user exists
-        const existingUser = await prisma.user.findUnique({
-            where: { email }
-        })
-
-        if (existingUser) {
-            return NextResponse.json({ message: "User already exists" }, { status: 409 })
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        const newUser = await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashedPassword,
-                role: role || 'USER',
-                isActive: true // Manually created users are active by default
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                isActive: true,
-                createdAt: true
-            }
+        const newUser = await UserService.registerUser({
+            name,
+            email,
+            password,
+            role: role || 'USER',
+            isActive: true // Admin created users are active
         })
 
         return NextResponse.json(newUser, { status: 201 })
 
-    } catch (error) {
+    } catch (error: any) {
+        if (error.message === "Usuario ya registrado") {
+            return NextResponse.json({ message: "User already exists" }, { status: 409 })
+        }
         return NextResponse.json({ message: "Error creating user" }, { status: 500 })
     }
 }
@@ -123,9 +94,7 @@ export async function DELETE(req: Request) {
     }
 
     try {
-        await prisma.user.delete({
-            where: { id: userId }
-        })
+        await UserService.deleteUser(userId as string)
         return NextResponse.json({ message: "User deleted" })
     } catch (error) {
         return NextResponse.json({ message: "Error deleting user" }, { status: 500 })
@@ -152,10 +121,20 @@ export async function PATCH(req: Request) {
         if (action === 'promote') updateData.role = 'ADMIN'
         if (action === 'demote') updateData.role = 'USER'
 
-        const user = await prisma.user.update({
-            where: { id: userId },
-            data: updateData
-        })
+        // We use getUserByEmail normally, but here we have ID. 
+        // UserService.updateUser uses email. We might need updateById or fetch email first.
+        // For efficiency, let's assume we fetch user first or add updateById to service.
+        // Given current service only has updateUser by email, let's fetch email first or add ID support.
+        // To keep strictly to plan I will add updateById to service or fetch user. 
+        // Actually, fetching user by ID is cleaner.
+
+        // Wait, UserService.updateUser takes email. 
+        // Let's modify UserService to support ID or just fetch user here.
+        // Fetching user:
+        const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+        if (!targetUser) return NextResponse.json({ message: "User not found" }, { status: 404 });
+
+        const user = await UserService.updateUser(targetUser.email, updateData);
 
         return NextResponse.json(user)
 
