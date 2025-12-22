@@ -5,6 +5,8 @@ import { Providers } from "@/components/Providers";
 import CookieBanner from "@/components/legal/CookieBanner";
 
 
+import { AIChatOverlay } from "@/components/ai/AIChatWidget";
+
 const inter = Inter({ subsets: ["latin"], display: 'swap' });
 
 export const metadata: Metadata = {
@@ -23,7 +25,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <CookieBanner />
-
+          <AIChatOverlay />
         </Providers>
       </body>
     </html>

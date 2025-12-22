@@ -17,13 +17,37 @@ export default function ProfilePage() {
         confirmPassword: "",
     });
 
+    const fetchProfile = async () => {
+        try {
+            const res = await fetch("/api/profile");
+            if (res.ok) {
+                const data = await res.json();
+                setFormData(prev => ({
+                    ...prev,
+                    name: data.name || "",
+                    email: data.email || "",
+                }));
+            }
+        } catch (error) {
+            console.error("Failed to fetch profile", error);
+        }
+    };
+
     useEffect(() => {
         if (session?.user) {
-            setFormData(prev => ({
-                ...prev,
-                name: session.user.name || "",
-                email: session.user.email || "",
-            }));
+            fetchProfile();
+
+            // Listen for agent updates (using the global event name for consistency)
+            const handleProfileUpdate = () => {
+                console.log("Profile updated by agent, refreshing...");
+                fetchProfile();
+            };
+
+            window.addEventListener("REFRESH_USERS_LIST_EVENT", handleProfileUpdate);
+
+            return () => {
+                window.removeEventListener("REFRESH_USERS_LIST_EVENT", handleProfileUpdate);
+            };
         }
     }, [session]);
 

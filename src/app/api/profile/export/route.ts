@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
+import { UserService } from "@/lib/services/userService"
 
 export async function GET(req: Request) {
     const session = await getServerSession(authOptions)
@@ -11,34 +11,13 @@ export async function GET(req: Request) {
     }
 
     try {
-        const userData = await prisma.user.findUnique({
-            where: { id: (session.user as any).id },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                isActive: true,
-                createdAt: true,
-                updatedAt: true,
-                theme: true
-                // Add relations here if any exist later (e.g. posts, logs)
-            }
-        })
-
-        if (!userData) {
-            return NextResponse.json({ message: "User not found" }, { status: 404 })
-        }
-
-        const exportData = {
-            user: userData,
-            exportedAt: new Date().toISOString(),
-            compliance: "GDPR/LSSI"
-        }
-
+        const exportData = await UserService.exportUserData((session.user as any).id);
         return NextResponse.json(exportData)
 
-    } catch (error) {
+    } catch (error: any) {
+        if (error.message === "User not found") {
+            return NextResponse.json({ message: "User not found" }, { status: 404 })
+        }
         return NextResponse.json({ message: "Error exporting data" }, { status: 500 })
     }
 }
