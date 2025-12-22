@@ -71,6 +71,8 @@ export function AIChatOverlay() {
                 }
             }
 
+
+
             // Add bot message
             setMessages((prev) => [
                 ...prev,

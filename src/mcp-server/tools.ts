@@ -104,6 +104,69 @@ export const exportUserDataTool = tool(
     }
 );
 
+// --- User Management Tools ---
+
+export const getUserTool = tool(
+    async ({ email }) => {
+        try {
+            const user = await UserService.getUserByEmail(email);
+            if (!user) {
+                return `User not found with email: ${email}`;
+            }
+            return JSON.stringify(user, null, 2);
+        } catch (error: any) {
+            return `Failed to get user: ${error.message}`;
+        }
+    },
+    {
+        name: "get_user",
+        description: "Get user details by email.",
+        schema: z.object({
+            email: z.string().email(),
+        })
+    }
+);
+
+export const deleteUserTool = tool(
+    async ({ userId }) => {
+        try {
+            await UserService.deleteUser(userId);
+            return `User deleted successfully: ${userId}`;
+        } catch (error: any) {
+            return `Failed to delete user: ${error.message}`;
+        }
+    },
+    {
+        name: "delete_user",
+        description: "Delete a user by ID (permanent).",
+        schema: z.object({
+            userId: z.string().describe("UUID of the user to delete"),
+        })
+    }
+);
+
+export const updateProfileTool = tool(
+    async ({ email, name, theme, password }) => {
+        try {
+            const user = await UserService.updateUser(email, { name, theme, password });
+            // Don't return the full user object with password hash, just confirmation
+            return `Profile updated for ${user.email}. Name: ${user.name}, Theme: ${user.theme}`;
+        } catch (error: any) {
+            return `Failed to update profile: ${error.message}`;
+        }
+    },
+    {
+        name: "update_profile",
+        description: "Update user profile settings (name, theme, password).",
+        schema: z.object({
+            email: z.string().email(),
+            name: z.string().optional(),
+            theme: z.enum(["light", "dark"]).optional(),
+            password: z.string().min(6).optional().describe("New password if changing"),
+        })
+    }
+);
+
 // --- Workspace Tools ---
 
 export const listWorkspacesTool = tool(
@@ -206,6 +269,33 @@ export function registerUserTools(server: McpServer) {
         exportUserDataTool.schema as any,
         async (args: any) => {
             const result = await exportUserDataTool.invoke(args);
+            return { content: [{ type: "text" as const, text: String(result) }] };
+        }
+    );
+
+    server.tool(
+        getUserTool.name,
+        getUserTool.schema as any,
+        async (args: any) => {
+            const result = await getUserTool.invoke(args);
+            return { content: [{ type: "text" as const, text: String(result) }] };
+        }
+    );
+
+    server.tool(
+        deleteUserTool.name,
+        deleteUserTool.schema as any,
+        async (args: any) => {
+            const result = await deleteUserTool.invoke(args);
+            return { content: [{ type: "text" as const, text: String(result) }] };
+        }
+    );
+
+    server.tool(
+        updateProfileTool.name,
+        updateProfileTool.schema as any,
+        async (args: any) => {
+            const result = await updateProfileTool.invoke(args);
             return { content: [{ type: "text" as const, text: String(result) }] };
         }
     );

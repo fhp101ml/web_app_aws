@@ -10,6 +10,9 @@ import {
     approveUserTool,
     adminUpdateUserTool,
     exportUserDataTool,
+    getUserTool,
+    deleteUserTool,
+    updateProfileTool,
     listWorkspacesTool,
     createWorkspaceTool,
     setThemeTool
@@ -28,6 +31,9 @@ const tools = [
     approveUserTool,
     adminUpdateUserTool,
     exportUserDataTool,
+    getUserTool,
+    deleteUserTool,
+    updateProfileTool,
     listWorkspacesTool,
     createWorkspaceTool,
     setThemeTool

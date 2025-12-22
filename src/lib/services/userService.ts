@@ -63,11 +63,12 @@ export class UserService {
     /**
      * Updates an existing user's profile.
      */
-    static async updateUser(email: string, data: { name?: string; password?: string; theme?: string, isActive?: boolean }) {
+    static async updateUser(email: string, data: { name?: string; password?: string; theme?: string, isActive?: boolean; role?: string }) {
         const updateData: any = {};
         if (data.name !== undefined) updateData.name = data.name;
         if (data.theme !== undefined) updateData.theme = data.theme;
         if (data.isActive !== undefined) updateData.isActive = data.isActive;
+        if (data.role !== undefined) updateData.role = data.role;
 
         if (data.password) {
             updateData.password = await bcrypt.hash(data.password, 10);

@@ -4,6 +4,8 @@ import { UserService } from "@/lib/services/userService";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(req: Request) {
     try {
         const session = await getServerSession(authOptions);
