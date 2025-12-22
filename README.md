@@ -1,7 +1,7 @@
 
-# ExoCluster - Cloud Management Platform (v1.0.0)
+# ExoCluster - Cloud Management Platform (v1.2.0-AI)
 
-**ExoCluster** es una plataforma moderna para la gestión centralizada de recursos en la nube. Esta versión **v1.0 - "Legal & Compliance Core"** consolida la arquitectura base, la seguridad avanzada y un sistema integral de cumplimiento normativo (RGPD/LSSI).
+**ExoCluster** es una plataforma moderna para la gestión centralizada de recursos en la nube. Esta versión **v1.2 - "Self-Healing & Profile AI"** avanza en la autonomía del agente, permitiéndole interactuar profundamente con la sesión del usuario y corregir sus propias limitaciones.
 
 ## 🚀 Funcionalidades Actuales
 
@@ -12,36 +12,39 @@
 - **Registro de Usuarios**: Formulario de registro público con aprobación de admin.
 - **Gestión de Sesión**: Cierre de sesión seguro con limpieza de estado.
 
-### 2. Cumplimiento Normativo (LegalTech Module) 🆕
+### 2. Cumplimiento Normativo (LegalTech Module)
 Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
 - **Páginas Legales Premium**: Diseño "Security-First" para `/legal/privacy` y `/legal/terms`.
 - **Gestión de Consentimiento (CMP)**:
-  - Sistema de cookies profesional con control granular (Necesarias, Preferencias, Estadísticas, Marketing).
+  - Sistema de cookies profesional con control granular.
   - Persistencia local y emisión de eventos (`cookie_consent_updated`).
   - Interfaz de "Aceptación Vinculante" con firma digital visual.
 - **Derechos ARCO del Usuario**:
-  - **Portabilidad de Datos**: Exportación completa de perfil en formato JSON (`/api/profile/export`).
+  - **Portabilidad de Datos**: Exportación completa de perfil en formato JSON (`/api/profile/export`), accesible también vía IA.
   - **Derecho al Olvido**: Eliminación irreversible de cuenta y datos asociados.
 
-### 3. Gestión de Usuarios (Admin)
-- **Panel de Administración**: Vista tabular estilizada de todos los usuarios registrados.
-- **Aprobación de Cuentas**: Los administradores pueden aprobar o rechazar nuevos registros.
-- **Eliminación**: Capacidad para eliminar usuarios del sistema.
+### 3. Service Layer Architecture 🛡️
+- **Arquitectura de Servicios**: Lógica de negocio centralizada en `src/lib/services/` (`UserService`, `WorkspaceService`).
+- **MCP Integration**: El Modelo de Protocolo de Contexto (MCP) se conecta directamente a estos servicios, permitiendo al agente IA realizar las mismas acciones que la API REST.
 
-### 4. Perfil de Usuario Avanzado
-- **Gestión de Identidad**: Actualización de nombre y contraseña.
-- **Personalización**: Preferencia de **Tema (Claro/Oscuro)** persistente en base de datos.
-- **UX Mejorada**: Iconografía premium "outline", Glassmorphism, feedback visual.
+### 4. Gestión de Usuarios y Workspaces
+- **Usuarios (Admin)**: Creación, borrado, y edición completa de usuarios (incluyendo roles y estado activo) desde Panel y Chat.
+- **Workspaces**: Creación y listado de espacios de trabajo con aislamiento lógico y visibilidad basada en roles.
 
-### 5. Interfaz de Usuario (UI/UX)
+### 5. Asistente Virtual Inteligente (MCP Powered) 🤖
+- **Chatbot Integrado**: Widget flotante alimentado por LangGraph y OpenAI.
+- **Agentic Capabilities**:
+  - **Gestión de Usuarios**: "Crea un usuario admin llamado Pepe", "Pruébame la cuenta de usuario@test.com".
+  - **Gestión de Perfil**: El usuario puede pedir cambios en su propio perfil (nombre, tema, password) y verlos reflejados **instantáneamente**.
+  - **Workspaces**: "Crea un workspace llamado Producción".
+  - **Self-Healing UI**: El agente emite eventos globales (`REFRESH_USERS_LIST_EVENT`) que la interfaz escucha para recargar datos automáticamente sin intervención del usuario.
+- **Client-Side Magic**: Capacidad de realizar acciones en el navegador del usuario.
+  - *Ejemplo*: "Pon modo oscuro" cambia el tema instantáneamente.
+
+### 6. Interfaz de Usuario (UI/UX)
 - **Diseño Premium**: Estética moderna con Glassmorphism, desenfoques y sombras sutiles.
-- **Sistema de Temas**: Soporte nativo para modo oscuro/claro, sincronizado con la sesión.
-- **Navegación Intuitiva**: Header consolidado con menú de usuario desplegable.
-
-### 6. Rendimiento y Seguridad
-- **Rate Limiting**: Protección Token Bucket en API Routes (`src/lib/rate-limit.ts`).
-- **Seguridad HTTP**: Headers de seguridad (CSP, HSTS, X-Frame-Options).
-- **Accesibilidad**: Cumplimiento WCAG 2.1 AA (contrastes, navegación por teclado, aria-labels).
+- **Sistema de Temas**: Soporte nativo para modo oscuro/claro, controlable vía IA.
+- **Reactive UI**: Las tablas y formularios se actualizan solos cuando el agente realiza cambios en segundo plano.
 
 ---
 
@@ -49,10 +52,13 @@ Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
 
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
 - **Lenguaje**: TypeScript
-- **Base de Datos**: SQLite (Dev) / PostgreSQL (Prod ready)
-- **ORM**: Prisma
+- **IA Core**: 
+  - **LangChain & LangGraph**: Orquestación de agentes y flujos de estado.
+  - **Model Context Protocol (MCP)**: Estandarización de herramientas para la IA.
+  - **OpenAI GPT-4o-mini**: Modelo LLM subyacente.
+- **Base de Datos**: SQLite (Dev) / Prisma ORM
 - **Autenticación**: NextAuth.js v4
-- **Estilos**: Raw CSS Modules + Variables CSS (Zero-Runtime Overhead)
+- **Estilos**: Raw CSS Modules + Variables CSS
 
 ---
 
@@ -61,6 +67,7 @@ Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
 ### 1. Requisitos Previos
 - Node.js 18+
 - NPM
+- OpenAI API Key
 
 ### 2. Instalación
 ```bash
@@ -71,53 +78,138 @@ npm install
 ```bash
 DATABASE_URL="file:./dev.db"
 NEXTAUTH_SECRET="tu-clave-secreta-super-segura"
-# NEXTAUTH_URL="http://localhost:3000" # Opcional
+OPENAI_API_KEY="sk-..."
 ```
 
-### 4. Base de Datos
+### 4. Inicialización
 ```bash
 npx prisma generate
 npx prisma db push
-```
-
-### 5. Crear Super Admin
-```bash
 node scripts/create-admin.js
 ```
-*(Credenciales por defecto en la salida del script)*
-
----
-
-## ▶️ Ejecución
-
-```bash
-npm run dev
-```
-Acceso en: `http://localhost:3000`
 
 ---
 
 ## 📝 Historial de Versiones
 
-### **v1.0.0**: "Legal & Compliance Core" (Release Actual)
-Consolidación del módulo legal y derechos de usuario.
-- ✅ Rediseño completo de páginas legales (Estilo Cloud Console).
-- ✅ Sistema de consentimiento de cookies granular (Cookiebot-style).
-- ✅ Funciones de privacidad: Exportar datos y Eliminar cuenta.
-- ✅ Mejoras visuales en botones de confirmación legal.
+### **v1.2.0-AI**: "Self-Healing & Profile AI"
+- ✅ **Profile MCP Tools**: Nuevas herramientas `get_user`, `delete_user`, `update_profile` integradas en el grafo.
+- ✅ **Reactive Refresh**: Implementación de event bus global para que el Agente fuerce la actualización de la UI.
+- ✅ **LangGraph Integration**: Registro completo de herramientas en la arquitectura de grafos para evitar alucinaciones.
+- ✅ **Dynamic API**: Endpoints de perfil forzados a modo dinámico para garantizar consistencia de datos.
 
-### **v0.1.0**: "Alpha Core"
-- ✅ Autenticación, Gestión de Usuarios, Dashboard básico.
+### **v1.1.0-AI**: "AI Ops & Service Core"
+- ✅ **Service Layer Refactor**: Centralización de lógica en `UserService` y `WorkspaceService`.
+- ✅ **MCP Expansion**: 8 herramientas initciales para el agente (Admin, Workspaces, Export).
+
+### **v1.0.0**: "Legal & Compliance Core"
+- ✅ Rediseño completo de páginas legales y CMP.
+- ✅ Funciones de privacidad GDPR.
 
 ---
 
-## 🚧 Roadmap (Próximos pasos)
+## 🚧 Roadmap
+- [ ] **Dashboard de Métricas**: Visualización de uso de CPU/RAM de "nubes" simuladas.
+- [ ] **Integración Real AWS**: Conexión con AWS SDK para provisión real.
 
-### Fase 5: Refinamiento Visual y Futuro
-- [ ] **Gestión Avanzada de Cookies**: Dashboard de auditoría de cookies para admins.
-- [ ] **Rediseño Visual de Inicio**: Eliminar diseño plano, adoptar estilo landing page SaaS.
-- [ ] **Rediseño Formulario de Acceso**: Estilo Glassmorphism con validaciones animadas.
+**ExoCluster** es una plataforma moderna para la gestión centralizada de recursos en la nube. Esta versión **v1.1 - "AI Ops & Service Core"** expande las capacidades del agente inteligente y refactoriza el núcleo del sistema para mayor robustez.
 
-### Infraestructura
-- [ ] Migración a PostgreSQL/MySQL externa.
-- [ ] Scripts de migración de datos producción.
+## 🚀 Funcionalidades Actuales
+
+### 1. Autenticación y Seguridad
+- **Login Seguro**: Sistema robusto basado en `NextAuth.js` con credenciales (Email/Password).
+- **Protección de Rutas**: Middleware que protege `/dashboard` y sub-rutas.
+- **Roles de Usuario**: Distinción entre `ADMIN` y `USER`.
+- **Registro de Usuarios**: Formulario de registro público con aprobación de admin.
+- **Gestión de Sesión**: Cierre de sesión seguro con limpieza de estado.
+
+### 2. Cumplimiento Normativo (LegalTech Module)
+Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
+- **Páginas Legales Premium**: Diseño "Security-First" para `/legal/privacy` y `/legal/terms`.
+- **Gestión de Consentimiento (CMP)**:
+  - Sistema de cookies profesional con control granular.
+  - Persistencia local y emisión de eventos (`cookie_consent_updated`).
+  - Interfaz de "Aceptación Vinculante" con firma digital visual.
+- **Derechos ARCO del Usuario**:
+  - **Portabilidad de Datos**: Exportación completa de perfil en formato JSON (`/api/profile/export`), accesible también vía IA.
+  - **Derecho al Olvido**: Eliminación irreversible de cuenta y datos asociados.
+
+### 3. Service Layer Architecture (Nuevo) 🛡️
+- **Arquitectura de Servicios**: Lógica de negocio centralizada en `src/lib/services/` (`UserService`, `WorkspaceService`).
+- **MCP Integration**: El Modelo de Protocolo de Contexto (MCP) se conecta directamente a estos servicios, permitiendo al agente IA realizar las mismas acciones que la API REST.
+
+### 4. Gestión de Usuarios y Workspaces
+- **Usuarios (Admin)**: Creación, borrado, y edición completa de usuarios (incluyendo roles y estado activo) desde Panel y Chat.
+- **Workspaces**: Creación y listado de espacios de trabajo con aislamiento lógico y visibilidad basada en roles.
+
+### 5. Asistente Virtual Inteligente (MCP Powered) 🤖
+- **Chatbot Integrado**: Widget flotante alimentado por LangChain y OpenAI.
+- **Capacidades Ops**:
+  - **Gestión de Usuarios**: "Crea un usuario admin llamado Pepe", "Pruébame la cuenta de usuario@test.com".
+  - **Workspaces**: "Crea un workspace llamado Producción".
+  - **Consultas**: "Lista todos los usuarios activos".
+- **Client-Side Magic**: Capacidad de realizar acciones en el navegador del usuario.
+  - *Ejemplo*: "Pon modo oscuro" cambia el tema instantáneamente sin recargar.
+
+### 6. Interfaz de Usuario (UI/UX)
+- **Diseño Premium**: Estética moderna con Glassmorphism, desenfoques y sombras sutiles.
+- **Sistema de Temas**: Soporte nativo para modo oscuro/claro, controlable vía IA.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Lenguaje**: TypeScript
+- **IA/Agent**: LangChain, LangGraph, Model Context Protocol (MCP)
+- **Base de Datos**: SQLite (Dev) / Prisma ORM
+- **Autenticación**: NextAuth.js v4
+- **Estilos**: Raw CSS Modules + Variables CSS
+
+---
+
+## ⚙️ Instalación y Configuración
+
+### 1. Requisitos Previos
+- Node.js 18+
+- NPM
+- OpenAI API Key
+
+### 2. Instalación
+```bash
+npm install
+```
+
+### 3. Configuración de Entorno (.env)
+```bash
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_SECRET="tu-clave-secreta-super-segura"
+OPENAI_API_KEY="sk-..."
+```
+
+### 4. Inicialización
+```bash
+npx prisma generate
+npx prisma db push
+node scripts/create-admin.js
+```
+
+---
+
+## 📝 Historial de Versiones
+
+### **v1.1.0-AI**: "AI Ops & Service Core"
+- ✅ **Service Layer Refactor**: Centralización de lógica en `UserService` y `WorkspaceService`.
+- ✅ **MCP Expansion**: 8 herramientas nuevas para el agente (Admin, Workspaces, Export).
+- ✅ **Client-Side AI Actions**: Protocolo para que la IA controle la UI (e.g., cambiar tema).
+- ✅ **System Prompt**: Definición robusta de capacidades del agente.
+
+### **v1.0.0**: "Legal & Compliance Core"
+- ✅ Rediseño completo de páginas legales y CMP.
+- ✅ Funciones de privacidad GDPR.
+
+---
+
+## 🚧 Roadmap
+- [ ] **Dashboard de Métricas**: Visualización de uso de CPU/RAM de "nubes" simuladas.
+- [ ] **Integración Real AWS**: Conexión con AWS SDK para provisión real.

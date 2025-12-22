@@ -67,6 +67,19 @@ export default function Header() {
                 <Link href="#" className={styles.navLink + " opacity-50 cursor-not-allowed"} aria-disabled="true" role="link">
                     Documentación
                 </Link>
+
+                {/* AI Chat Trigger */}
+                <button
+                    onClick={() => {
+                        console.log("Dispatching OPEN_AI_CHAT");
+                        window.dispatchEvent(new Event("OPEN_AI_CHAT"));
+                    }}
+                    className={`${styles.navLink} inline-flex items-center gap-2`}
+                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', color: 'inherit' }}
+                >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+                    Asistente AI
+                </button>
             </nav>
 
             <div className={styles.rightActions}>
@@ -94,8 +107,8 @@ export default function Header() {
                         aria-label="Menú de usuario"
                     >
                         <div className={styles.userInfo}>
-                            <span className={styles.userName}>{user.name || 'Usuario'}</span>
-                            <span className={styles.userRole}>{user.role || 'Member'}</span>
+                            <span className={`${styles.userName} text-gray-900 dark:text-white`}>{user.name || 'Usuario'}</span>
+                            <span className={`${styles.userRole} text-gray-500 dark:text-gray-400`}>{user.role || 'Member'}</span>
                         </div>
                         <div className={styles.userAvatar}>
                             {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
