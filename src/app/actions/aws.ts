@@ -83,12 +83,19 @@ export async function stopInstanceAction(instanceId: string, providerType?: 'aws
     }
 }
 
-export async function createInstanceAction(providerType?: 'aws' | 'localstack'): Promise<{ success: boolean; error?: string }> {
+export async function createInstanceAction(
+    providerType: 'aws' | 'localstack' | undefined,
+    amiId: string,
+    instanceType: string,
+    name?: string
+): Promise<{ success: boolean; error?: string }> {
     try {
         const provider = await getProvider(providerType);
-        // Hardcoded for Quick Launch demo
-        // For LocalStack, AMI IDs don't strictly matter if not validating
-        await provider.createInstance("ami-12345678", "t2.micro");
+        // Using dynamically passed AMI ID and Instance Type
+        await provider.createInstance(amiId, instanceType);
+        // Note: The AwsCloudProvider.createInstance might need updates to support 'name' tagging if not already present,
+        // but for now we pass the essential launch parameters to fix the InvalidAMIID error.
+
         revalidatePath('/dashboard/aws');
         return { success: true };
     } catch (error) {

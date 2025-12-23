@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/Button';
 import React, { useState, useEffect } from 'react';
 import {
     DndContext,
@@ -212,18 +213,19 @@ export function ConfigurableDashboard({ data }: ConfigurableDashboardProps) {
     return (
         <div className={styles.dashboardContainer}>
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgba(255,255,255,0.1)] pb-4">
                 <div>
-                    <h1 className="text-xl font-bold text-slate-800">Console Home</h1>
-                    <p className="text-sm text-slate-500">Manage your AWS services and resources.</p>
+                    <h1 className="text-xl font-bold text-[hsl(var(--text-primary))]">Console Home</h1>
+                    <p className="text-sm text-[hsl(var(--text-muted))]">Manage your AWS services and resources.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
+                    <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={() => { setRows(DEFAULT_LAYOUT); localStorage.removeItem('aws_dashboard_rows'); }}
-                        className="px-3 py-1.5 text-xs font-medium bg-white border border-slate-300 rounded hover:bg-slate-50 text-slate-700 transition-colors shadow-sm"
                     >
                         Reset to default
-                    </button>
+                    </Button>
                     <WidgetCatalog availableWidgets={availableToAdd} onAddWidget={handleAddWidget} />
                 </div>
             </div>
@@ -252,8 +254,8 @@ export function ConfigurableDashboard({ data }: ConfigurableDashboardProps) {
                 {/* Visual Drag Overlay */}
                 <DragOverlay dropAnimation={dropAnimation}>
                     {activeId ? (
-                        <div className="w-[300px] h-[100px] bg-white rounded-xl shadow-2xl border border-blue-500 opacity-90 p-4 flex items-center justify-center">
-                            <span className="font-bold text-slate-600">Moving Widget...</span>
+                        <div className="w-[300px] h-[100px] bg-[hsl(var(--bg-card))] rounded-lg shadow-xl border border-[hsl(var(--aws-orange))] opacity-90 p-4 flex items-center justify-center">
+                            <span className="font-bold text-[hsl(var(--text-primary))]">Moving Widget...</span>
                         </div>
                     ) : null}
                 </DragOverlay>

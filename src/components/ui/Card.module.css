@@ -1,0 +1,58 @@
+/* Card.module.css */
+.card {
+    background-color: hsl(var(--bg-card));
+    border: 1px solid var(--aws-border, rgba(255, 255, 255, 0.1));
+    border-radius: var(--radius-sm);
+    /* AWS uses tighter radii */
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme='light'] .card {
+    --aws-border: #e2e8f0;
+}
+
+[data-theme='dark'] .card {
+    --aws-border: rgba(255, 255, 255, 0.08);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-primary);
+    /* Subtle highlight on hover like AWS Insights */
+}
+
+.header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--aws-border, rgba(255, 255, 255, 0.1));
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: hsl(var(--text-primary));
+    margin: 0;
+    line-height: 1.2;
+}
+
+.content {
+    padding: 1.25rem;
+    flex: 1;
+    color: hsl(var(--text-secondary));
+    font-size: 0.875rem;
+}
+
+.footer {
+    padding: 0.75rem 1.25rem;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid var(--aws-border, rgba(255, 255, 255, 0.1));
+    font-size: 0.8125rem;
+    color: hsl(var(--aws-blue));
+}

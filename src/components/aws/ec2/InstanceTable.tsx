@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { CloudInstance } from '@/core/interfaces/ICloudProvider';
 import { startInstanceAction, stopInstanceAction, deleteInstanceAction, rebootInstanceAction } from '@/app/actions/aws';
 import { Play, Square, Loader2, Monitor, AlertCircle, Trash2, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import styles from '../aws.module.css';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
+import TerminalModal from '@/components/ui/TerminalModal';
 
 interface InstanceTableProps {
     instances: CloudInstance[];
@@ -18,6 +20,10 @@ export default function InstanceTable({ instances, providerType }: InstanceTable
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [instanceToDelete, setInstanceToDelete] = useState<string | null>(null);
+    const [terminalState, setTerminalState] = useState<{ isOpen: boolean; instanceId: string; publicIp?: string }>({
+        isOpen: false,
+        instanceId: '',
+    });
 
     // Live polling for updates (2 seconds)
     useEffect(() => {
@@ -118,6 +124,13 @@ export default function InstanceTable({ instances, providerType }: InstanceTable
                 isLoading={loadingId === instanceToDelete}
             />
 
+            <TerminalModal
+                isOpen={terminalState.isOpen}
+                onClose={() => setTerminalState(prev => ({ ...prev, isOpen: false }))}
+                instanceId={terminalState.instanceId}
+                publicIp={terminalState.publicIp}
+            />
+
             {error && (
                 <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4" />
@@ -180,53 +193,63 @@ export default function InstanceTable({ instances, providerType }: InstanceTable
                                     <td className={`${styles.td} text-right`}>
                                         <div className={styles.actionGroup}>
                                             {/* Start - Primary Action */}
-                                            <button
+                                            <Button
                                                 onClick={() => handleStart(inst.id)}
                                                 disabled={inst.state !== 'stopped' || loadingId === inst.id}
-                                                className={styles.btnActionPrimary}
-                                                style={{ opacity: inst.state !== 'stopped' ? 0.5 : 1, cursor: inst.state !== 'stopped' ? 'not-allowed' : 'pointer' }}
-                                                title="Start Instance"
+                                                isLoading={loadingId === inst.id && inst.state === 'stopped'}
+                                                variant="primary"
+                                                size="sm"
+                                                className="h-8"
                                             >
-                                                {loadingId === inst.id && inst.state === 'stopped' ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
                                                 Start
-                                            </button>
+                                            </Button>
 
                                             {/* Stop - Secondary Action */}
-                                            <button
+                                            <Button
                                                 onClick={() => handleStop(inst.id)}
                                                 disabled={inst.state !== 'running' || loadingId === inst.id}
-                                                className={styles.btnActionSecondary}
-                                                style={{
-                                                    borderColor: inst.state === 'running' ? 'rgba(245, 158, 11, 0.4)' : 'transparent',
-                                                    color: inst.state === 'running' ? '#fbbf24' : 'gray',
-                                                    opacity: inst.state !== 'running' ? 0.5 : 1,
-                                                    cursor: inst.state !== 'running' ? 'not-allowed' : 'pointer'
-                                                }}
-                                                title="Stop Instance"
+                                                isLoading={loadingId === inst.id && inst.state === 'running'}
+                                                variant="secondary"
+                                                size="sm"
+                                                className="h-8 text-[hsl(var(--aws-orange))] border-[hsl(var(--aws-orange))] hover:bg-[rgba(255,153,0,0.1)]"
                                             >
-                                                {loadingId === inst.id && inst.state === 'running' ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
                                                 Stop
-                                            </button>
+                                            </Button>
 
                                             {/* Reboot - Icon Action */}
-                                            <button
+                                            <Button
                                                 onClick={() => handleReboot(inst.id)}
                                                 disabled={inst.state !== 'running' || loadingId === inst.id}
-                                                className={styles.btnActionIcon}
-                                                title="Reboot Instance"
+                                                isLoading={loadingId === inst.id && inst.state === 'running'}
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0"
                                             >
-                                                {loadingId === inst.id && inst.state === 'running' ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                                            </button>
+                                                <RefreshCw className="w-4 h-4" />
+                                            </Button>
+
+                                            {/* Connect - Icon Action */}
+                                            <Button
+                                                onClick={() => setTerminalState({ isOpen: true, instanceId: inst.id, publicIp: inst.publicIp })}
+                                                disabled={inst.state !== 'running'}
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0 text-green-400 hover:text-green-300 hover:bg-green-400/10"
+                                                title="Connect via SSH"
+                                            >
+                                                <Monitor className="w-4 h-4" />
+                                            </Button>
 
                                             {/* Delete - Icon Action */}
-                                            <button
+                                            <Button
                                                 onClick={() => handleDeleteClick(inst.id)}
                                                 disabled={inst.state === 'terminated' || loadingId === inst.id}
-                                                className={styles.btnActionIcon}
-                                                title="Terminate Instance"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-500/10"
                                             >
-                                                {loadingId === inst.id && instanceToDelete === inst.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                                            </button>
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
                                         </div>
                                     </td>
                                 </tr>
