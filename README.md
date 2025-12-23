@@ -1,43 +1,56 @@
+# ExoCluster - Cloud Management Platform (v1.3.0-AWS)
 
-# ExoCluster - Cloud Management Platform (v1.3.0)
-
-**ExoCluster** es una plataforma moderna para la gestión centralizada de recursos en la nube. Esta versión **v1.3 - "Modular Cloud Console"** introduce un dashboard completamente rediseñado, modular y conectado a datos reales de AWS, replicando la experiencia de consola profesional.
+**ExoCluster** es una plataforma moderna para la gestión centralizada de recursos en la nube. Esta versión **v1.3 - "AWS Integration"** integra conexión real con AWS SDK, eliminando datos simulados y permitiendo gestión operativa real (Reboot, S3 Browser, VPCs).
 
 ## 🚀 Funcionalidades Actuales
 
-### 1. Modular Dashboard (Nuevo en v1.3) 🧩
-Experiencia de usuario inspirada en la AWS Console Home:
-- **Grid Configurable**: Sistema de filas y columnas (3-col grid) que permite organizar widgets.
-- **Widgets Inteligentes**:
-  - **Cost & Usage**: Visualización de costes reales (AWS Cost Explorer).
-  - **Health**: Estado de salud de los servicios.
-  - **Recent Resources**: Últimas instancias, buckets y funciones accedidas.
-  - **Favorites**: Accesos directos a servicios frecuentes.
-- **Drag & Drop (Beta)**: Capacidad de reordenar widgets y personalizar la vista.
-- **Persistencia Visual**: El diseño personalizado se guarda localmente.
+### 1. Autenticación y Seguridad
+- **Login Seguro**: Sistema robusto basado en `NextAuth.js` con credenciales (Email/Password).
+- **Protección de Rutas**: Middleware que protege `/dashboard` y sub-rutas.
+- **Roles de Usuario**: Distinción entre `ADMIN` y `USER`.
+- **Registro de Usuarios**: Formulario de registro público con aprobación de admin.
+- **Gestión de Sesión**: Cierre de sesión seguro con limpieza de estado.
 
-### 2. Integración Real AWS (Nuevo en v1.3) ☁️
-- **AWS SDK V3**: Conexión nativa a servicios reales (EC2, S3, Lambda, RDS, Cost Explorer).
-- **Datos en Tiempo Real**: Las tablas y gráficos reflejan el estado actual de la infraestructura.
-- **Gestión de EC2**: Lanzar, detener y terminar instancias directamente desde la UI.
+### 2. Cumplimiento Normativo (LegalTech Module)
+Sistema completo diseñado para cumplir con **RGPD (UE)** y **LSSI**:
+- **Páginas Legales Premium**: Diseño "Security-First" para `/legal/privacy` y `/legal/terms`.
+- **Gestión de Consentimiento (CMP)**:
+  - Sistema de cookies profesional con control granular.
+  - Persistencia local y emisión de eventos (`cookie_consent_updated`).
+  - Interfaz de "Aceptación Vinculante" con firma digital visual.
+- **Derechos ARCO del Usuario**:
+  - **Portabilidad de Datos**: Exportación completa de perfil en formato JSON (`/api/profile/export`), accesible también vía IA.
+  - **Derecho al Olvido**: Eliminación irreversible de cuenta y datos asociados.
 
-### 3. Autenticación y Seguridad
-- **Login Seguro**: Sistema robusto basado en `NextAuth.js`.
-- **Protección de Rutas**: Middleware de seguridad.
-- **Roles**: Admin/User y gestión de usuarios.
+### 3. Service Layer Architecture 🛡️
+- **Arquitectura de Servicios**: Lógica de negocio centralizada en `src/lib/services/` (`UserService`, `WorkspaceService`).
+- **MCP Integration**: El Modelo de Protocolo de Contexto (MCP) se conecta directamente a estos servicios, permitiendo al agente IA realizar las mismas acciones que la API REST.
 
-### 4. Cumplimiento Normativo (LegalTech)
-- Paginas legales RGPD/LSSI.
-- Gestión de consentimientos y cookies.
-- Derechos ARCO y portabilidad de datos.
+### 4. Cloud Management (Nuevo) ☁️
+Integración nativa con **AWS SDK v3**:
+- **Compute (EC2)**: Listado en tiempo real, arranque, parada y **reinicio** de instancias.
+- **Storage (S3)**: Gestión de buckets y **explorador de objetos** (listar archivos).
+- **Network (VPC)**: Visualización de VPCs y **subnets** con detalles de direccionamiento IP.
+- **Zero-Mock Policy**: Todos los datos provienen de la API real de AWS (o LocalStack si se configura).
 
-### 5. Service Layer Architecture
-- Arquitectura escalable basada en Servicios (`UserService`, `CloudService`).
-- Integración profunda con **MCP (Model Context Protocol)** para agentes de IA.
+### 5. Gestión de Usuarios y Workspaces
+- **Usuarios (Admin)**: Creación, borrado, y edición completa de usuarios (incluyendo roles y estado activo) desde Panel y Chat.
+- **Workspaces**: Creación y listado de espacios de trabajo con aislamiento lógico y visibilidad basada en roles.
 
-### 6. Asistente Virtual Inteligente 🤖
-- Chatbot integrado con capacidad de operar la plataforma ("Crea un usuario", "Pon modo oscuro").
-- **Self-Healing UI**: La interfaz reacciona a los cambios realizados por el agente.
+### 6. Asistente Virtual Inteligente (MCP Powered) 🤖
+- **Chatbot Integrado**: Widget flotante alimentado por LangGraph y OpenAI.
+- **Agentic Capabilities**:
+  - **Gestión de Usuarios**: "Crea un usuario admin llamado Pepe", "Pruébame la cuenta de usuario@test.com".
+  - **Gestión de Perfil**: El usuario puede pedir cambios en su propio perfil (nombre, tema, password) y verlos reflejados **instantáneamente**.
+  - **Workspaces**: "Crea un workspace llamado Producción".
+  - **Self-Healing UI**: El agente emite eventos globales (`REFRESH_USERS_LIST_EVENT`) que la interfaz escucha para recargar datos automáticamente sin intervención del usuario.
+- **Client-Side Magic**: Capacidad de realizar acciones en el navegador del usuario.
+  - *Ejemplo*: "Pon modo oscuro" cambia el tema instantáneamente.
+
+### 7. Interfaz de Usuario (UI/UX)
+- **Diseño Premium**: Estética moderna con Glassmorphism, desenfoques y sombras sutiles.
+- **Sistema de Temas**: Soporte nativo para modo oscuro/claro, controlable vía IA.
+- **Reactive UI**: Las tablas y formularios se actualizan solos cuando el agente realiza cambios en segundo plano.
 
 ---
 
@@ -45,19 +58,24 @@ Experiencia de usuario inspirada en la AWS Console Home:
 
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
 - **Lenguaje**: TypeScript
-- **Cloud integration**: AWS SDK v3
-- **IA Core**: LangChain, LangGraph, MCP
+- **IA Core**: 
+  - **LangChain & LangGraph**: Orquestación de agentes y flujos de estado.
+  - **Model Context Protocol (MCP)**: Estandarización de herramientas para la IA.
+  - **OpenAI GPT-4o-mini**: Modelo LLM subyacente.
+- **Cloud SDK**: AWS SDK for JavaScript v3.
 - **Base de Datos**: SQLite (Dev) / Prisma ORM
-- **Estilos**: Modular CSS "Clean Enterprise" Theme
+- **Autenticación**: NextAuth.js v4
+- **Estilos**: Raw CSS Modules + Variables CSS
 
 ---
 
 ## ⚙️ Instalación y Configuración
 
 ### 1. Requisitos Previos
-- Node.js 18+
-- AWS Credentials (profile o variables de entorno)
+- **Node.js 20+ (Recomendado v22 LTS)** - *Importante por soporte AWS SDK*
+- NPM
 - OpenAI API Key
+- Credenciales AWS (para módulo Cloud)
 
 ### 2. Instalación
 ```bash
@@ -67,11 +85,12 @@ npm install
 ### 3. Configuración de Entorno (.env)
 ```bash
 DATABASE_URL="file:./dev.db"
-NEXTAUTH_SECRET="tu-clave-secreta"
+NEXTAUTH_SECRET="tu-clave-secreta-super-segura"
 OPENAI_API_KEY="sk-..."
-# AWS Credentials (opcional si usas ~/.aws/credentials)
-AWS_ACCESS_KEY_ID="..."
-AWS_SECRET_ACCESS_KEY="..."
+
+# AWS Configuration (Opcional, para Cloud Module)
+AWS_ACCESS_KEY_ID="tu-access-key"
+AWS_SECRET_ACCESS_KEY="tu-secret-key"
 AWS_REGION="us-east-1"
 ```
 
@@ -80,31 +99,35 @@ AWS_REGION="us-east-1"
 npx prisma generate
 npx prisma db push
 node scripts/create-admin.js
-npm run dev
 ```
 
 ---
 
 ## 📝 Historial de Versiones
 
-### **v1.3.0**: "Modular Cloud Console"
-- ✅ **Console Home Redesign**: Dashboard baseado en widgets y filas configurables.
-- ✅ **Real AWS Data**: Integración completa de AWS SDK (Cost, Lambda, RDS, EC2).
-- ✅ **Clean Aesthetic**: Nuevo tema visual moderno (tarjetas blancas, sombras suaves).
-- ✅ **Drag & Drop**: Implementación de motor de arrastrar y soltar para widgets.
+### **v1.3.0-AWS**: "Integrated Cloud"
+- ✅ **AWS SDK v3 Integration**: Reemplazo total de datos mock por llamadas reales a la API de AWS.
+- ✅ **EC2 Management**: Reboot, Start, Stop, List.
+- ✅ **S3 Explorer**: Listado de buckets y objetos.
+- ✅ **Network Visibility**: Listado de VPCs y Subnets expandibles.
+- ✅ **Node.js Update**: Actualización de requisitos a Node v22 LTS.
 
 ### **v1.2.0-AI**: "Self-Healing & Profile AI"
-- ✅ **Profile MCP Tools**: Herramientas para gestión de perfil por IA.
-- ✅ **Reactive Refresh**: Bus de eventos para actualizaciones UI.
+- ✅ **Profile MCP Tools**: Nuevas herramientas `get_user`, `delete_user`, `update_profile` integradas en el grafo.
+- ✅ **Reactive Refresh**: Implementación de event bus global para que el Agente fuerce la actualización de la UI.
+- ✅ **LangGraph Integration**: Registro completo de herramientas en la arquitectura de grafos para evitar alucinaciones.
+- ✅ **Dynamic API**: Endpoints de perfil forzados a modo dinámico para garantizar consistencia de datos.
 
 ### **v1.1.0-AI**: "AI Ops & Service Core"
-- ✅ **Service Layer Refactor**: Centralización lógica de negocio.
-- ✅ **MCP Expansion**: Herramientas de administración para el agente.
+- ✅ **Service Layer Refactor**: Centralización de lógica en `UserService` y `WorkspaceService`.
+- ✅ **MCP Expansion**: 8 herramientas initciales para el agente (Admin, Workspaces, Export).
+
+### **v1.0.0**: "Legal & Compliance Core"
+- ✅ Rediseño completo de páginas legales y CMP.
+- ✅ Funciones de privacidad GDPR.
 
 ---
 
 ## 🚧 Roadmap
-- [x] **Integración Real AWS**: Conexión con AWS SDK.
-- [x] **Dashboard Modular**: Grid configurable.
-- [ ] **Multi-Cloud Support**: Añadir soporte para Azure/GCP.
-- [ ] **Mobile App**: Versión PWA optimizada.
+- [ ] **Dashboard de Métricas**: Visualización de métricas CloudWatch.
+- [ ] **Multi-Cloud**: Integración con Azure/GCP.
