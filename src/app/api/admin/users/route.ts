@@ -132,7 +132,7 @@ export async function PATCH(req: Request) {
         // Let's modify UserService to support ID or just fetch user here.
         // Fetching user:
         const targetUser = await prisma.user.findUnique({ where: { id: userId } });
-        if (!targetUser) return NextResponse.json({ message: "User not found" }, { status: 404 });
+        if (!targetUser || !targetUser.email) return NextResponse.json({ message: "User not found or has no email" }, { status: 404 });
 
         const user = await UserService.updateUser(targetUser.email, updateData);
 

@@ -39,6 +39,14 @@ export function middleware(request: NextRequest) {
     response.headers.set('X-Content-Type-Options', 'nosniff')
     response.headers.set('Referrer-Policy', 'origin-when-cross-origin')
 
+    // Cloud Provider Cookie Sync
+    // Ensures server actions use the provider specified in the URL
+    const pathname = request.nextUrl.pathname;
+    const match = pathname.match(/^\/dashboard\/(aws|localstack)/);
+    if (match) {
+        response.cookies.set('cloud_provider', match[1]);
+    }
+
     return response
 }
 

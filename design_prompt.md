@@ -1,3 +1,10 @@
+haz un resumen de mis interacciones y de los resultados , exitos y fracasos, incluye esto en un archivo que se llama historyAIConversation.md.no borres el contenido del archivo añadelo
+
+con las fechas corresondientes a modo de diario
+
+
+
+
 # PROMPT — Página Legal moderna (SaaS cloud, con CSS propuesto)
 
 ___________________________________________________________________

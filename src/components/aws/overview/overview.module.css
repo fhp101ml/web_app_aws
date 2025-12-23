@@ -1,0 +1,121 @@
+/* Modern Clean Dashboard Theme (User Request) */
+
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-bottom: 2.5rem;
+}
+
+/* Base Widget Style (Modern Clean) */
+.widget {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 1rem;
+    /* Rounded-XL */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    /* Soft Shadow */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+.widgetHeader {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+}
+
+.widgetTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    /* Slate 800 */
+    letter-spacing: -0.01em;
+}
+
+.widgetContent {
+    padding: 1.5rem;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.widgetFooter {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f8fafc;
+    background-color: #ffffff;
+    font-size: 0.875rem;
+}
+
+/* Dragging State */
+.dragging {
+    opacity: 0.5;
+    transform: scale(1.02);
+    cursor: grabbing;
+    z-index: 50;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Specific Component Styles */
+.statusIndicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    display: inline-block;
+}
+
+.statusRunning {
+    background-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+.statusStopped {
+    background-color: #94a3b8;
+}
+
+.statusTerminated {
+    background-color: #ef4444;
+}
+
+.statusWarning {
+    background-color: #f59e0b;
+}
+
+.resourceRow {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s ease;
+    margin-bottom: 0.25rem;
+}
+
+.resourceRow:hover {
+    background-color: #f8fafc;
+}
+
+.resourceIcon {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #f1f5f9;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resourceRow:hover .resourceIcon {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}

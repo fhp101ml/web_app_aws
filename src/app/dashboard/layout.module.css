@@ -1,16 +1,21 @@
 .layoutContainer {
     min-height: 100vh;
     background-color: hsl(var(--bg-primary));
+    display: flex;
+    flex-direction: column;
+}
+
+.contentWrapper {
+    display: flex;
+    flex: 1;
+    margin-top: 70px;
+    /* Header height + spacing */
 }
 
 .mainContent {
-    max-width: 80rem;
-    /* Equivalent to max-w-7xl */
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    /* px-6 */
-    padding-top: 160px;
-    /* pt-40 equivalent, strict spacing for header */
-    padding-bottom: 3rem;
-    /* pb-12 */
+    flex: 1;
+    padding: 2rem;
+    width: 100%;
+    /* Remove centric max-width for fluid dashboard feel */
+    overflow-x: hidden;
 }

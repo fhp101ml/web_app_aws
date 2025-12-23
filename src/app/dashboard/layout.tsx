@@ -18,9 +18,11 @@ export default async function DashboardLayout({
     return (
         <div className={styles.layoutContainer}>
             <Header />
-            <main className={styles.mainContent}>
+
+            {/* Main Content Area */}
+            <div className={styles.contentWrapper}>
                 {children}
-            </main>
+            </div>
         </div>
     );
 }
